@@ -1,0 +1,6 @@
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/main.c:170:6:SystemClock_Config	3
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/main.c:111:5:main	29
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/main.c:754:10:CalcParityBit	16
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/main.c:769:7:read_as5048a	19
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/main.c:810:6:HAL_TIM_PeriodElapsedCallback	2
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/main.c:827:6:Error_Handler	1

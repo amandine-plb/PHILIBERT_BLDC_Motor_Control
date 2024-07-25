@@ -1,0 +1,10 @@
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:68:6:HAL_MspInit	16	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:98:6:HAL_ADC_MspInit	128	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:201:6:HAL_ADC_MspDeInit	8	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:280:6:HAL_CORDIC_MspInit	8	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:302:6:HAL_CORDIC_MspDeInit	0	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:324:6:HAL_TIM_Base_MspInit	48	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:364:6:HAL_TIM_MspPostInit	40	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:398:6:HAL_TIM_Base_MspDeInit	8	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:448:6:HAL_UART_MspInit	112	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/stm32g4xx_hal_msp.c:530:6:HAL_UART_MspDeInit	8	static

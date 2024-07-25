@@ -1,0 +1,6 @@
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/MCSDK_v6.1.2-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:50:13:OL_Init	1
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/MCSDK_v6.1.2-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:73:13:OL_VqdConditioning	1
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/MCSDK_v6.1.2-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:90:13:OL_UpdateVoltage	1
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/MCSDK_v6.1.2-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:110:16:OL_GetVoltage	1
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/MCSDK_v6.1.2-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:126:13:OL_Calc	3
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/MCSDK_v6.1.2-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:158:13:OL_VF	1

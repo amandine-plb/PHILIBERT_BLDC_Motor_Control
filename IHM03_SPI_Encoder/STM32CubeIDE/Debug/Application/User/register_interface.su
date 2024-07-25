@@ -1,0 +1,4 @@
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/register_interface.c:38:16:RI_SetRegCommandParser	64	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/register_interface.c:112:16:RI_GetRegCommandParser	136	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/register_interface.c:1223:9:RI_GetIDSize	0	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_SPI_Encoder/Src/register_interface.c:1257:16:RI_GetPtrReg	0	static

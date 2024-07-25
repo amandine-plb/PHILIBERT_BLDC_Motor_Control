@@ -1,0 +1,4 @@
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/main.c:152:6:SystemClock_Config	88	static,ignoring_inline_asm
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/main.c:96:5:main	184	static,ignoring_inline_asm
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/main.c:683:6:HAL_TIM_PeriodElapsedCallback	8	static
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/IHM03_Motor/Src/main.c:759:6:Error_Handler	0	static,ignoring_inline_asm

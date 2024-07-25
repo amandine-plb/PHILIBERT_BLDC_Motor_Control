@@ -1,0 +1,10 @@
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:163:6:ASPEP_start	1
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:185:6:ASPEP_sendBeacon	3
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:216:6:ASPEP_sendPing	3
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:241:6:ASPEP_getBuffer	5
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:304:6:ASPEP_CheckBeacon	5
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:345:9:ASPEP_sendPacket	14
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:518:6:ASPEP_HWDataTransmittedIT	8
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:586:10:ASPEP_RXframeProcess	29
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:740:6:ASPEP_HWDataReceivedIT	9
+C:/Users/amand/OneDrive/Bureau/Projet_Stage_2A/NUCLEO-IHM03/Src/aspep.c:829:6:ASPEP_HWDMAReset	1
