@@ -121,7 +121,7 @@
         <define key="TF_KIDIV" value="2048" />
         <define key="TF_KDDIV" value="8192" />
         <define key="PID_SPEED_KP_DEFAULT" value="2730" />
-        <define key="PID_SPEED_KI_DEFAULT" value="562" />
+        <define key="PID_SPEED_KI_DEFAULT" value="281" />
         <define key="PID_SPEED_KD_DEFAULT" value="0" />
         <define key="SP_KPDIV" value="256" />
         <define key="SP_KIDIV" value="16384" />
@@ -135,7 +135,7 @@
         <define key="SEGDIV" value="0" />
         <define key="ANGC" value="{0,0,0,0,0,0,0,0}" />
         <define key="OFST" value="{0,0,0,0,0,0,0,0}" />
-        <define key="SPEED_LOOP_FREQUENCY_HZ" value="1000" />
+        <define key="SPEED_LOOP_FREQUENCY_HZ" value="2000" />
         <define key="POSITION_CTRL_ENABLING" value="DISABLE" />
         <define key="PID_TORQUE_KP_DEFAULT" value="3547" />
         <define key="PID_TORQUE_KI_DEFAULT" value="3547" />

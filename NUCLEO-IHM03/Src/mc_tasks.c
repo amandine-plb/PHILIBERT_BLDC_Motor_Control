@@ -147,11 +147,14 @@ float Eltemp2;
 int16_t int16ElAngle2;
 
 int16_t estimatedVelocitydHz;
+float vel;
 
 volatile uint32_t sharedCounter;
 float DesiredSpeed;// rpm
 
-MCI_State_t StateMotor;
+float mechAngleRef;
+float K = 7;
+
 /* USER CODE END Private Variables */
 
 /* Private functions ---------------------------------------------------------*/
@@ -169,6 +172,7 @@ bool TSK_StopPermanencyTimeHasElapsedM1(void);
 void TSK_SafetyTask_PWMOFF(uint8_t motor);
 
 /* USER CODE BEGIN Private Functions */
+// Calculation of even parity bit for a 16-bit command //
 uint16_t CalcParityBit(uint16_t command)
 {
 	uint8_t x = 0;
@@ -183,7 +187,7 @@ uint16_t CalcParityBit(uint16_t command)
 	}
 	return x & 0x1;
 }
-
+// Function to Read Data from AS5048A Sensor via SPI //
 void readAs5048a(SPI_HandleTypeDef *hspi)
 {
 	command1 = (RW << 14) | (adress & 0x3FFF) ;
@@ -222,7 +226,7 @@ void readAs5048a(SPI_HandleTypeDef *hspi)
     angleRad = ((float)data) / 16384.0*2.0*M_PI;
     angleDeg = ((float)data) / 16384.0 *360.0;
 }
-
+// Handling Motor Fault Acknowledgement //
 int handleMotorFaults()
 {
     bool isFaultAcknowledged = MC_AcknowledgeFaultMotor1();
@@ -237,7 +241,7 @@ int handleMotorFaults()
     }
     return fault;
 }
-
+// Updating Velocity Using a Low-Pass Filter and Correction for limits values//
 void updateValueVelocity(float currentAngle, float Ts)
 {
 	// Low-pass filter //
@@ -270,6 +274,38 @@ void updateValueVelocity(float currentAngle, float Ts)
 	previousAngle = currentAngle;
 	previousVelocity = currentVelocity;
 }
+
+float P_Controller(float mechanicalAngle, float direction)// to add reference angle : float mechAngleRef,
+{
+	float error = mechAngleRef - mechanicalAngle;
+	float Kp = 5.0;
+	float UpperSpeedLimit = 180;
+	float LowerSpeedLimit = -180;
+	float speed;
+
+	if (direction >0) // Clockwise rotation
+	{
+		speed = Kp*error;
+	}
+	else // Anti Clockwise rotation
+	{
+		speed = -Kp*error;
+	}
+	if (speed > UpperSpeedLimit)
+	{
+		speed = UpperSpeedLimit;
+	}
+	else if (speed < LowerSpeedLimit)
+	{
+	    speed = LowerSpeedLimit;
+	 }
+	 else
+	 {
+	   /* Nothing to do here */
+	 }
+	return speed;
+}
+
 /* USER CODE END Private Functions */
 /**
   * @brief  It initializes the whole MC core according to user defined
@@ -508,69 +544,127 @@ __weak void MC_Scheduler(void)
 __weak void TSK_MediumFrequencyTaskM1(void)
 {
   /* USER CODE BEGIN MediumFrequencyTask M1 0 */
+
+	// To skip the first ramp //
     if (Mci[M1].State == START)
     {
         Mci[M1].State = RUN;
     }
-
+    // To count the time elapsed
 	sharedCounter ++;
-	StateMotor = Mci[M1].State;
 
-	if (sharedCounter < 1000)
+    // To control the motor in position
+	if (sharedCounter < 2000)
 	{
 		DesiredSpeed = 0;
 		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
 		(void)MC_StartMotor1();
 	}
-	if (sharedCounter < 15000)
+	if (sharedCounter < 10000)
 	{
-		DesiredSpeed = ((300 *10)/60)*65536;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+		mechAngleRef = 90.0;
+		vel = P_Controller(mechanicalAngle, -1);
+		DesiredSpeed = ((vel*10)/60)*65536;
+		pMCI[M1]->pSTC->SpeedRefUnitExt = (int32_t)DesiredSpeed ;
 	}
-	else if (sharedCounter < 20000)
+	else if (sharedCounter < 14000)
 	{
-		DesiredSpeed = ((400 *10)/60)*65536;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+		mechAngleRef = 180.0;
+		vel = P_Controller(mechanicalAngle, -1);
+		DesiredSpeed = ((vel*10)/60)*65536;
+		pMCI[M1]->pSTC->SpeedRefUnitExt = (int32_t)DesiredSpeed ;
 	}
-	else if (sharedCounter < 25000)
+	else if (sharedCounter < 18000)
 	{
-		DesiredSpeed = ((50 *10)/60)*65536;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+		mechAngleRef = 270.0;
+		vel = P_Controller(mechanicalAngle, -1);
+		DesiredSpeed = ((vel*10)/60)*65536;
+		pMCI[M1]->pSTC->SpeedRefUnitExt = (int32_t)DesiredSpeed ;
 	}
-	else if (sharedCounter < 26000)
+	else if (sharedCounter < 22000)
 	{
-		DesiredSpeed = 0;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+		mechAngleRef = 180.0;
+		vel = P_Controller(mechanicalAngle, -1);
+		DesiredSpeed = ((vel*10)/60)*65536;
+		pMCI[M1]->pSTC->SpeedRefUnitExt = (int32_t)DesiredSpeed ;
 	}
-	else if (sharedCounter < 35000)
+	else if (sharedCounter < 24000)
 	{
-		DesiredSpeed = ((75 *10)/60)*65536;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = -DesiredSpeed ;
+		mechAngleRef = 90.0;
+		vel = P_Controller(mechanicalAngle, -1);
+		DesiredSpeed = ((vel*10)/60)*65536;
+		pMCI[M1]->pSTC->SpeedRefUnitExt = (int32_t)DesiredSpeed ;
 	}
-	else if (sharedCounter < 40000)
-	{
-		DesiredSpeed = ((300 *10)/60)*65536;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = -DesiredSpeed ;
-	}
-	else if (sharedCounter < 45000)
-	{
-		DesiredSpeed = ((400 *10)/60)*65536;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = -DesiredSpeed ;
-	}
-	else if (sharedCounter < 50000)
-	{
-		DesiredSpeed = ((500 *10)/60)*65536;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = -DesiredSpeed ;
-	}
-	else if (sharedCounter < 53000)
+	else if (sharedCounter < 28000)
 	{
 		DesiredSpeed = 0;
-		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+	    pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
 	}
-	else if (sharedCounter < 55000)
+	else if (sharedCounter < 30000)
 	{
 		(void)MC_StopMotor1();
 	}
+////     To control the motor in speed
+//	if (sharedCounter < 2000)
+//	{
+//		DesiredSpeed = 0;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+//		(void)MC_StartMotor1();
+//	}
+//	else if (sharedCounter < 5000)
+//	{
+//		DesiredSpeed = ((200*10)/60)*65536;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 10000)
+//	{
+//		DesiredSpeed = ((300*10)/60)*65536;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 15000)
+//	{
+//		DesiredSpeed = ((400*10)/60)*65536;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 20000)
+//	{
+//		DesiredSpeed = ((500*10)/60)*65536;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 26000)
+//	{
+//		DesiredSpeed = 0;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 35000)
+//	{
+//		DesiredSpeed = ((500 *10)/60)*65536;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = -DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 40000)
+//	{
+//		DesiredSpeed = ((400 *10)/60)*65536;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = -DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 45000)
+//	{
+//		DesiredSpeed = ((300 *10)/60)*65536;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = -DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 50000)
+//	{
+//		DesiredSpeed = ((200 *10)/60)*65536;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = -DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 55000)
+//	{
+//		DesiredSpeed = 0;
+//		pMCI[M1]->pSTC->SpeedRefUnitExt = DesiredSpeed ;
+//	}
+//	else if (sharedCounter < 57000)
+//	{
+//		(void)MC_StopMotor1();
+//	}
 
   /* USER CODE END MediumFrequencyTask M1 0 */
 
@@ -665,7 +759,10 @@ __weak void TSK_MediumFrequencyTaskM1(void)
               STO_PLL_Clear(&STO_PLL_M1);
               FOC_Clear( M1 );
 
-              Mci[M1].State = START;
+              {
+
+                Mci[M1].State = START;
+              }
 
               PWMC_SwitchOnPWM(pwmcHandle[M1]);
             }
@@ -799,12 +896,9 @@ __weak void TSK_MediumFrequencyTaskM1(void)
           else
           {
             /* USER CODE BEGIN MediumFrequencyTask M1 2 */
-
+        	// Very important to keep this variable TRUE : it prevents from an SPEED FEED BACK error
+        	//  while modifying electrical angle estimated by electrical angle calculated
         	IsSpeedReliable = true;
-
-//        	VelocitaMecDSpeedUnit = wAux;
-//        	AccMecDSpeedUnit = pSTC[M1]->SPD->hMecAccelUnitP;
-//        	NbError = pSTC[M1]->SPD->bSpeedErrorNumber;
 
             /* USER CODE END MediumFrequencyTask M1 2 */
 
@@ -956,11 +1050,12 @@ __weak void FOC_CalcCurrRef(uint8_t bMotor)
 {
 
   /* USER CODE BEGIN FOC_CalcCurrRef 0 */
+	// To use the velocity calculated instead of the one estimated //
 	if (Mci[M1].State == RUN)
 	{
 		currentVelocityRPM = -currentVelocity * 60.0/360.0; // velocity in RPM
-		currentVelocitydHz = currentVelocityRPM/60.0*10.0;
-		estimatedVelocitydHz = pSTC[M1]->SPD->hAvrMecSpeedUnit;
+		currentVelocitydHz = currentVelocityRPM/60.0*10.0; // velocity in 0.1 Hz
+//		estimatedVelocitydHz = pSTC[M1]->SPD->hAvrMecSpeedUnit;
 		pSTC[M1]->SPD->hAvrMecSpeedUnit = (int16_t)currentVelocitydHz;
 
 	}
@@ -1054,10 +1149,6 @@ __attribute__((section (".ccmram")))
 __weak uint8_t TSK_HighFrequencyTask(void)
 {
   /* USER CODE BEGIN HighFrequencyTask 0 */
-//	if (Mci[M1].State == CHARGE_BOOT_CAP)
-//	{
-//		Mci[M1].State = RUN;
-//	}
 
   /* USER CODE END HighFrequencyTask 0 */
 
@@ -1077,13 +1168,14 @@ __weak uint8_t TSK_HighFrequencyTask(void)
   /* USER CODE BEGIN HighFrequencyTask SINGLEDRIVE_1 */
   readAs5048a(&hspi3); // read the angle
  (void)updateValueVelocity(mechanicalAngle, 0.0001); // calculate the velocity
-  mechanicalAngle = angleDeg;
+  mechanicalAngle = angleDeg; // mechanical angle read by the encoder and expressed in degree
 
   if (Mci[M1].State == RUN)
   {
-   float offsetMean = -147.6537;
+   float offsetMean = -147.6537; // offset calculated to align calculated values with the estimated ones
    float polePairs = 7.0;
 
+   // Calculation of the electrical angle used instead of the one estimated
    electricalAngleEstimatedCorrected = fmodf(360-fmodf(polePairs*mechanicalAngle,360.0)-360.0/65536, 360);
 
 	if (electricalAngleEstimatedCorrected > 180)
@@ -1101,23 +1193,17 @@ __weak uint8_t TSK_HighFrequencyTask(void)
 	}
 	int16ElAngle2 = (int16_t)((Eltemp/180.0)*32767.0);
 
-//	electricalAngleEstimatedCorrected = fmodf(electricalAngleEstimatedCorrected + offsetMean, 360);
+//	int16ElAngle = (int16_t)((electricalAngleEstimatedCorrected/180.0)*32767.0);
 
-//	electricalAngleEstimatedCorrected = Eltemp - 180;
-	int16ElAngle = (int16_t)((electricalAngleEstimatedCorrected/180.0)*32767.0);
+	pSTC[M1]->SPD->hElAngle = int16ElAngle2;
 
+	// Just to see some values //
 	ElAnglePLL = STO_PLL_M1._Super.hElAngle;
 	ElAngleSTC = pSTC[M1]->SPD->hElAngle;
 	ElAngleRef = FOCVars[M1].hElAngle;
 
-	pSTC[M1]->SPD->hElAngle = int16ElAngle2; //(int16_t)fmodf((float)(ElAnglePLL + 1000), 32768.0);
-	STOPLL = STO_PLL_M1;
-
 	velocityIDE = pSTC[M1]->SPD->hAvrMecSpeedUnit;
 	velocityRef = pMCI[M1]->pSTC->SpeedRefUnitExt>>16;
-
-	Motor1 = pMCI[M1];
-	ReliabilitySpeed = STO_PLL_M1.IsSpeedReliable;
   }
 
   /* USER CODE END HighFrequencyTask SINGLEDRIVE_1 */

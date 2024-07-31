@@ -73,8 +73,6 @@ void Error_Handler(void);
 #define UART_RX_GPIO_Port GPIOA
 #define NSS_Pin GPIO_PIN_4
 #define NSS_GPIO_Port GPIOA
-#define TEST_Pin GPIO_PIN_6
-#define TEST_GPIO_Port GPIOA
 #define M1_CURR_AMPL_W_Pin GPIO_PIN_7
 #define M1_CURR_AMPL_W_GPIO_Port GPIOA
 #define M1_TEMPERATURE_Pin GPIO_PIN_4

@@ -49,8 +49,6 @@ CORDIC_HandleTypeDef hcordic;
 SPI_HandleTypeDef hspi3;
 
 TIM_HandleTypeDef htim1;
-TIM_HandleTypeDef htim2;
-TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
@@ -109,8 +107,6 @@ static void MX_CORDIC_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_SPI3_Init(void);
-static void MX_TIM2_Init(void);
-static void MX_TIM3_Init(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -137,7 +133,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-//  HAL_Delay(5000);
+  HAL_Delay(2000); // To wait for connexion with STM32 CUBE MONITOR (acquisition)
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -157,16 +153,14 @@ int main(void)
   MX_USART2_UART_Init();
   MX_MotorControl_Init();
   MX_SPI3_Init();
-  MX_TIM2_Init();
-  MX_TIM3_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Init(&htim2);
-  HAL_TIM_Base_Start_IT(&htim2);
-  HAL_TIM_Base_Init(&htim3);
-  HAL_TIM_Base_Start_IT(&htim3);
+//  HAL_TIM_Base_Init(&htim2);
+//  HAL_TIM_Base_Start_IT(&htim2);
+//  HAL_TIM_Base_Init(&htim3);
+//  HAL_TIM_Base_Start_IT(&htim3);
   HAL_SPI_Init(&hspi3);
 
   /* USER CODE END 2 */
@@ -255,12 +249,6 @@ static void MX_NVIC_Init(void)
   /* EXTI15_10_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 3, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-  /* TIM3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM3_IRQn, 0, 1);
-  HAL_NVIC_EnableIRQ(TIM3_IRQn);
-  /* TIM2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM2_IRQn, 1, 0);
-  HAL_NVIC_EnableIRQ(TIM2_IRQn);
 }
 
 /**
@@ -622,96 +610,6 @@ static void MX_TIM1_Init(void)
 }
 
 /**
-  * @brief TIM2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM2_Init(void)
-{
-
-  /* USER CODE BEGIN TIM2_Init 0 */
-
-  /* USER CODE END TIM2_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM2_Init 1 */
-
-  /* USER CODE END TIM2_Init 1 */
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 17-1;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 9999;
-  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM2_Init 2 */
-
-  /* USER CODE END TIM2_Init 2 */
-
-}
-
-/**
-  * @brief TIM3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM3_Init(void)
-{
-
-  /* USER CODE BEGIN TIM3_Init 0 */
-
-  /* USER CODE END TIM3_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM3_Init 1 */
-
-  /* USER CODE END TIM3_Init 1 */
-  htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 17-1;
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 999;
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM3_Init 2 */
-
-  /* USER CODE END TIM3_Init 2 */
-
-}
-
-/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -787,7 +685,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, NSS_Pin|TEST_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(NSS_GPIO_Port, NSS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, M1_PWM_EN_U_Pin|M1_PWM_EN_V_Pin|M1_PWM_EN_W_Pin, GPIO_PIN_RESET);
@@ -798,12 +696,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Start_Stop_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : NSS_Pin TEST_Pin */
-  GPIO_InitStruct.Pin = NSS_Pin|TEST_Pin;
+  /*Configure GPIO pin : NSS_Pin */
+  GPIO_InitStruct.Pin = NSS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(NSS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : M1_PWM_EN_U_Pin M1_PWM_EN_V_Pin M1_PWM_EN_W_Pin */
   GPIO_InitStruct.Pin = M1_PWM_EN_U_Pin|M1_PWM_EN_V_Pin|M1_PWM_EN_W_Pin;
@@ -815,6 +713,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+// You should not use this part of the code : go to mc_tasks.c //
 
 //uint16_t CalcParityBit(uint16_t command)
 //{
@@ -920,22 +819,22 @@ static void MX_GPIO_Init(void)
 //}
 
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	if (htim->Instance == TIM3)
-	{
-//		HAL_GPIO_WritePin(GPIOA, TEST_Pin, GPIO_PIN_SET);
-		CounterSPI ++;
-
-//		readAs5048a(&hspi3); // read the angle
-//		mechanicalAngle = angleDeg; // recover the angle value in currentAngle
-//		(void)updateValueVelocity(mechanicalAngle); // calculate the velocity
-//		currentVelocity = currentVelocity * 60/360; // velocity in RPM
-
-//		HAL_GPIO_WritePin(GPIOA, TEST_Pin, GPIO_PIN_RESET);
-	}
-	if (htim->Instance == TIM2)
-	{
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // To handle interrupts with timers
+//{
+//	if (htim->Instance == TIM3)
+//	{
+////		HAL_GPIO_WritePin(GPIOA, TEST_Pin, GPIO_PIN_SET);
+//		CounterSPI ++;
+//
+////		readAs5048a(&hspi3); // read the angle
+////		mechanicalAngle = angleDeg; // recover the angle value in currentAngle
+////		(void)updateValueVelocity(mechanicalAngle); // calculate the velocity
+////		currentVelocity = currentVelocity * 60/360; // velocity in RPM
+//
+////		HAL_GPIO_WritePin(GPIOA, TEST_Pin, GPIO_PIN_RESET);
+//	}
+//	if (htim->Instance == TIM2)
+//	{
 //		HAL_GPIO_WritePin(GPIOA, TEST_Pin, GPIO_PIN_SET);
 //		sharedCounter ++;
 //
@@ -999,8 +898,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 //	HAL_GPIO_WritePin(GPIOA, TEST_Pin, GPIO_PIN_RESET);
-	}
-}
+//	}
+//}
 //		faultStatus = handleMotorFaults();
 //		if (faultStatus == 1)
 //		{
