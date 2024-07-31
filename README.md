@@ -1,6 +1,7 @@
 # PHILIBERT_BLDC_Motor_Control
 
 This repository is about BLDC motor control with FOC control.
+
 I’m using the pack P-NUCLEO-IHM03 from ST. It’s composed of : 
 - An STM32G431RB control board
 - An IHM16M1 power board
@@ -62,6 +63,7 @@ In STM32 Cube Monitor
 * Start the acquisition and visualize the temporal evolution of the variables on the graph.
 
 **VII. How to use the code**
+
 I only modified the "tasks.c" file, as it contains the useful code. 
 There is some commented-out code in the "main.c" file, but you don't need to use it.
 
